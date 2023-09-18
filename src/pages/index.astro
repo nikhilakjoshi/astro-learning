@@ -1,0 +1,33 @@
+---
+import { z } from "zod";
+import { createZodFetcher } from "zod-fetch";
+const fetchWithZod = createZodFetcher();
+const todosT = await fetchWithZod(
+  z.array(
+    z.object({
+      userId: z.number(),
+      id: z.number(),
+      title: z.string(),
+      completed: z.boolean(),
+    })
+  ),
+  "https://jsonplaceholder.typicode.com/todos"
+);
+---
+
+<ul class="border container mx-auto max-w-screen-md p-5 rounded space-y-2 m-8">
+  {
+    todosT?.map((todo) => (
+      <li
+        class:list={[
+          "flex items-center justify-between",
+          {
+            "line-through": todo.completed,
+          },
+        ]}
+      >
+        {todo.title}
+      </li>
+    ))
+  }
+</ul>
